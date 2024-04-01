@@ -5,7 +5,7 @@ from .result import Result
 from .setting import Setting
 from .workchain import workchain_and_builder
 
-__version__ = '0.1.0'
+__version__ = "0.1.0"
 
 
 class HpOutline(OutlinePanel):
