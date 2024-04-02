@@ -66,15 +66,8 @@ def get_builder(codes, structure, parameters, **kwargs):
     return builder
 
 
-def update_input(builder, ctx):
-    """Update the builder with the context."""
-    if "hp" in builder:
-        builder.hp.parent_scf = ctx.scf_folder
-
-
 workchain_and_builder = {
     "workchain": QeappHpWorkChain,
     "exclude": ("clean_workdir", "structure"),
     "get_builder": get_builder,
-    "update_input": update_input,
 }

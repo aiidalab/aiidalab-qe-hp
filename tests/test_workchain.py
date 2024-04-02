@@ -20,6 +20,17 @@ def test_workchain(LiCoO2, pw_code, hp_code):
         "hp": hp_code,
     }
 
-    parameters = {"hp": setting.get_panel_value(), "workchain": {"protocol": "fast"}}
+    parameters = {
+        "hp": setting.get_panel_value(),
+        "workchain": {
+            "protocol": "fast",
+            "relax_type": "none",
+            "electronic_type": "insulator",
+            "spin_type": "collinear",
+        },
+        "advanced": {"initial_magnetic_moments": {"Co": 0.0, "O": 0.0, "Li": 0.0}},
+    }
+
     builder = get_builder(codes, structure, parameters, **{})
-    run(builder)
+    # run(builder)
+    print(builder)

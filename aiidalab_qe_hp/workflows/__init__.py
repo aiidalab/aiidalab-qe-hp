@@ -83,8 +83,9 @@ class QeappHpWorkChain(WorkChain, ProtocolMixin):
         )
         spec.expose_outputs(HpWorkChain, namespace='one_shot', namespace_options={'required': False})
         spec.expose_outputs(SelfConsistentHubbardWorkChain, namespace='scf_hubbard', namespace_options={'required': False})
-        spec.exit_code(200, 'ERROR_SUB_PROCESS_FAILED_ONE_SHOT', message='the one-shot sub process failed')
-        spec.exit_code(201, 'ERROR_SUB_PROCESS_FAILED_SELF_CONSISTENT', message='the self-consistent sub process failed')
+        spec.exit_code(200, 'ERROR_SUB_PROCESS_FAILED_SCF', message='the scf sub process failed')
+        spec.exit_code(201, 'ERROR_SUB_PROCESS_FAILED_ONE_SHOT', message='the one-shot sub process failed')
+        spec.exit_code(202, 'ERROR_SUB_PROCESS_FAILED_SELF_CONSISTENT', message='the self-consistent sub process failed')
 
 
     @classmethod
@@ -95,6 +96,7 @@ class QeappHpWorkChain(WorkChain, ProtocolMixin):
                                   parent_scf_folder=None,
                                   qpoints_distance=1000,
                                   overrides=None,
+                                  options=None,
                                   **kwargs):
         """Return a builder prepopulated with inputs selected according to the chosen protocol.
 
@@ -124,15 +126,24 @@ class QeappHpWorkChain(WorkChain, ProtocolMixin):
                 protocol="fast",
                 overrides=overrides_one_shot,
             )
+            if parent_scf_folder:
+                builder_one_shot.hp.parent_scf = parent_scf_folder
+            else:
+                builder_scf = PwBaseWorkChain.get_builder_from_protocol(
+                    pw_code, hubbard_structure, protocol, overrides=overrides.get('scf', None),
+                    **kwargs
+                )
+                builder.scf = builder_scf
             builder.one_shot = builder_one_shot
+            builder.pop("scf_hubbard", None)
         elif method == "self-consistent":
             overrides_scf_hubbard = overrides.get("scf_hubbard", {})
             overrides_scf_hubbard.update({
                 "tolerance_onsite": PROTOCOL_MAP_U[protocol],
                 "tolerance_intersite": PROTOCOL_MAP_V[protocol],
             })
-            overrides_hubbard = overrides_scf_hubbard.get("hubbard", {})
-            overrides_hubbard.update({
+            overrides_scf_hubbard.setdefault("hubbard", {})
+            overrides_scf_hubbard["hubbard"].update({
                 "parallelize_atoms": parallelize_atoms,
                 "parallelize_qpoints": parallelize_qpoints,
                 "qpoints_distance": qpoints_distance,
@@ -146,14 +157,8 @@ class QeappHpWorkChain(WorkChain, ProtocolMixin):
                 **kwargs,
             )
             builder.scf_hubbard = builder_scf_hubbard
-        if parent_scf_folder:
-            builder.one_shot.hp.parent_scf = parent_scf_folder
-        else:
-            builder_scf = PwBaseWorkChain.get_builder_from_protocol(
-                pw_code, hubbard_structure, protocol, overrides=overrides.get('scf', None),
-                **kwargs
-            )
-            builder.scf = builder_scf
+            builder.pop("one_shot", None)
+            builder.pop("scf", None)
 
         builder.pop("clean_workdir", None)
 
