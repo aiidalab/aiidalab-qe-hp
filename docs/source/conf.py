@@ -18,7 +18,7 @@ sys.path.insert(0, os.path.abspath('../..'))
 
 # -- Project information -----------------------------------------------------
 
-project = 'AiiDAlab QEApp HP plugin'
+project = 'AiiDAlab QEapp HP plugin'
 copyright = '2024, Xing Wang'
 author = 'Xing Wang'
 

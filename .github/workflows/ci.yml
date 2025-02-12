@@ -1,0 +1,30 @@
+name: ci
+
+on:
+  push:
+    # only pushes to main trigger
+    branches: [main]
+  pull_request:
+    # always triggered
+
+jobs:
+
+  pre-commit:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Install Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
+        cache: pip
+        cache-dependency-path: pyproject.toml
+
+    - name: Install Python package and dependencies
+      run: pip install -e .[dev]
+
+    - name: Run pre-commit
+      run: pre-commit run --all-files || ( git status --short ; git diff ; exit 1 )

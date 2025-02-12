@@ -10,7 +10,7 @@ This tutorial will guide you through the process of setting up and running Hubba
 Steps
 =====
 
-To start, go ahead and :doc:`launch </installation/launch>` the app, then follow the steps below.
+Launch the app, then follow the steps below.
 
 
 Step 1 Select a structure
@@ -19,7 +19,7 @@ For this tutorial task, please use the `From Examples` tab, and select the LiCoO
 
 Click the `Confirm` button to proceed.
 
-.. figure:: /_static/images/hp_step_1.png
+.. figure:: _static/images/hp_step_1.png
    :align: center
 
 
@@ -32,7 +32,7 @@ In the **Basic Settings** tab, set the following parameters:
 - Set **Electronic Type** to ``Insulator``
 - In the **properties** section, select ``Habbard parameter (HP)``
 
-.. image:: ../_static/images/hp_step_2_basic_setting.png
+.. image:: _static/images/hp_step_2_basic_setting.png
    :align: center
 
 
@@ -41,7 +41,7 @@ Set the **Manifold** to ``3d``.
 In the **Select couples of atoms for which inter-site Hubbard V must be computed** section, select first row by ticking the appropriate box.
 Set the **Manifold** to ``3d`` and ``2p`` for the **Co** atom and **O** atom, respectively.
 
-.. image:: ../_static/images/hp_step_2_hp_setting.png
+.. image:: _static/images/hp_step_2_hp_setting.png
    :align: center
 
 
@@ -55,12 +55,12 @@ In this small system, we can use the default `localhost` computer to run the cal
 
 .. tip::
    For large system, we need the high-performance computer to run HP calculation.
-   Please read the relevant :doc:`How-To </howto/setup_computer_code>` section to setup code on a remote machine.
+   Please read the relevant `How-To <https://aiidalab-qe.readthedocs.io/howto/setup_computer_code.html>`_ section to setup code on a remote machine.
 
 Set the number of CPUs/nodde to 2.
 
 
-.. image:: ../_static/images/hp_step_3.png
+.. image:: _static/images/hp_step_3.png
    :align: center
 
 
@@ -72,7 +72,7 @@ Step 4 Check the status and results
 -----------------------------------------
 The job may take 5~10 minutes to finish.
 
-While the calculation is running, you can monitor its status as shown in the :ref:`basic tutorial <basic_status>`.
+While the calculation is running, you can monitor its status.
 When the job is finished, you can view result spectra in the `HP` tab.
 
 .. tip::
@@ -87,7 +87,7 @@ Here is the result of the HP calculation. It includes:
 Click on the row above to highlight the specific atoms couple whose inter-site Hubbard V is being calculated.
 
 
-.. figure:: /_static/images/hp_step_4_xps_tab.png
+.. figure:: /_static/images/hp_step_4_hp_tab.png
    :align: center
 
 

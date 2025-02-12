@@ -22,9 +22,8 @@ classifiers = [
 dependencies = [
   "aiida-core>=2.3",
   "aiida-quantumespresso>=4.8",
-  "aiida-pythonjob>=0.1.8",
   "weas-widget>=0.1.24",
-  "aiida-quantumespresso-hp @ git+https://github.com/aiidateam/aiida-quantumespresso-hp.git@main"
+  "aiida-quantumespresso-hp @ git+https://github.com/aiidateam/aiida-quantumespresso-hp.git@master"
 ]
 dynamic = ['description', 'version']
 keywords = ['aiida', 'workflows', 'core-level', 'spectroscopy']
