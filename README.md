@@ -1,5 +1,6 @@
 # aiidalab-qe-hp
 
+A plugin for running hp calculations inside the AiiDAlab Quantum ESPRESSO App.
 
 
 ## Installation

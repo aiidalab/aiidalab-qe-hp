@@ -1,0 +1,117 @@
+[build-system]
+build-backend = 'flit_core.buildapi'
+requires = ['flit_core>=3.4,<4']
+
+[project]
+authors = [
+  {name = 'Xing Wang', email = 'xingwang1991@gmail.com'}
+]
+classifiers = [
+  'Development Status :: 4 - Beta',
+  'Framework :: AiiDA',
+  'License :: OSI Approved :: MIT License',
+  'Operating System :: POSIX :: Linux',
+  'Operating System :: MacOS :: MacOS X',
+  'Programming Language :: Python',
+  'Programming Language :: Python :: 3.9',
+  'Programming Language :: Python :: 3.10',
+  'Programming Language :: Python :: 3.11',
+  'Programming Language :: Python :: 3.12',
+  'Topic :: Scientific/Engineering'
+]
+dependencies = [
+  "aiida-core>=2.3",
+  "aiida-quantumespresso>=4.8",
+  "aiida-pythonjob>=0.1.8",
+  "weas-widget>=0.1.24",
+  "aiida-quantumespresso-hp @ git+https://github.com/aiidateam/aiida-quantumespresso-hp.git@main"
+]
+dynamic = ['description', 'version']
+keywords = ['aiida', 'workflows', 'core-level', 'spectroscopy']
+license = {file = 'LICENSE'}
+name = 'aiidalab-qe-hp'
+readme = 'README.md'
+requires-python = '>=3.9'
+
+[project.entry-points."aiidalab_qe.properties"]
+"hp" = "aiidalab_qe_hp:hp"
+
+[project.optional-dependencies]
+dev = [
+  'mypy==1.6.1',
+  'pre-commit',
+  'pytest~=6.2',
+  'pytest-regressions'
+]
+docs = [
+  'myst-parser',
+  'pydata-sphinx-theme~=0.14.3',
+  'sphinx~=7.2',
+  'sphinx-copybutton~=0.5.0',
+  'sphinx-click~=4.0',
+  'sphinx-design~=0.5.0',
+  'sphinx-favicon'
+]
+
+[project.urls]
+documentation = 'https://aiidalab-qe-hp.readthedocs.io/'
+homepage = 'https://github.com/superstar54/aiidalab-qe-hp'
+source = 'https://github.com/superstar54/aiidalab-qe-hp'
+tracker = 'https://github.com/superstar54/aiidalab-qe-hp/issues'
+
+[tool.flit.module]
+name = 'aiidalab_qe_hp'
+
+[tool.flit.sdist]
+exclude = [
+  '.github/',
+  'tests/',
+  '.gitignore',
+  '.pre-commit-config.yaml'
+]
+
+[tool.flynt]
+fail-on-change = true
+line-length = 120
+
+[tool.mypy]
+disallow_untyped_calls = false
+exclude = [
+  '^tests/'
+]
+strict = true
+
+[[tool.mypy.overrides]]
+ignore_missing_imports = true
+module = [
+  'ruamel.*'
+]
+
+[tool.pytest.ini_options]
+filterwarnings = [
+  'ignore:Creating AiiDA configuration folder.*:UserWarning',
+  'ignore:Object of type .* not in session, .* operation along .* will not proceed:sqlalchemy.exc.SAWarning'
+]
+
+[tool.ruff]
+ignore = [
+  'D203',  # Incompatible with D211 `no-blank-line-before-class`
+  'D213'  # Incompatible with D212 `multi-line-summary-second-line`
+]
+line-length = 120
+select = [
+  'E',  # pydocstyle
+  'W',  # pydocstyle
+  'F',  # pyflakes
+  'I',  # isort
+  'N',  # pep8-naming
+  'D',  # pydocstyle
+  'PLC',  # pylint-convention
+  'PLE',  # pylint-error
+  'PLR',  # pylint-refactor
+  'PLW',  # pylint-warning
+  'RUF'  # ruff
+]
+
+[tool.ruff.format]
+quote-style = 'single'

@@ -1,7 +1,8 @@
 
-Welcome to AiiDA Bader's documentation!
+Welcome to AiiDAlab QE HP's documentation!
 ===========================================
-AiiDA plugin for `Bader <https://theory.cm.utexas.edu/henkelman/code/bader/>`_ charge analysis.
+
+A plugin for running hp calculations inside the AiiDAlab Quantum ESPRESSO App.
 
 
 .. toctree::
