@@ -16,14 +16,13 @@ class HpResultsModel(ResultsModel):
 
     # The final structure containing the Hubbard parameters.
     hubbard_structure = tl.Instance(orm.StructureData, allow_none=True)
+    table_data = tl.Dict(allow_none=True)
 
-    # Data for displaying in the HPC result table, i.e. a list of rows.
-    # Typically the first row might be a header, the rest are data.
-    table_data = tl.List(allow_none=True, default_value=[])
+    _this_process_label = 'SelfConsistentHubbardWorkChain'
 
     def fetch_result(self):
         """
-        Fetch the HPC results from the process node and populate the traitlets.
+        Fetch the HP results from the process node and populate the traitlets.
         """
         process = self.fetch_process_node()
         # The original code checks 'relax' in the inputs to decide:
@@ -31,29 +30,25 @@ class HpResultsModel(ResultsModel):
             self.hubbard_structure = process.outputs.hp.hubbard_structure
         else:
             self.hubbard_structure = process.outputs.hp.hubbard_structure
-
-        # Build the table data from the HPC results:
         self.table_data = self._generate_table_data(self.hubbard_structure)
 
     def _generate_table_data(self, structure: orm.StructureData) -> list:
         """
         Build a 2D list (header + rows) describing the final Hubbard parameters.
         """
-        data = [
-            [
-                'Hubbard parameters',
-                'Atoms (I)',
-                'Atoms (J)',
-                'Index (I)',
-                'Index (J)',
-                'Value (eV)',
-                'Translation vector',
-                'Distance (Å)',
-            ]
+        columns = [
+            {'field': 'hubbard_type', 'headerName': 'Hubbard type', 'editable': False},
+            {'field': 'atom_manifold_i', 'headerName': 'Kind-Manifold (I)', 'editable': False},
+            {'field': 'atom_manifold_j', 'headerName': 'Kind-Manifold (J)', 'editable': False},
+            {'field': 'atom_index_i', 'headerName': 'Index (I)', 'editable': False},
+            {'field': 'atom_index_j', 'headerName': 'Index (J)', 'editable': False},
+            {'field': 'value', 'headerName': 'Value (eV)', 'editable': False},
+            {'field': 'translation', 'headerName': 'Translation vector', 'editable': False},
+            {'field': 'distance', 'headerName': 'Distance (Å)', 'editable': False},
         ]
-
         hubbard = structure.hubbard.dict()['parameters']
         natoms = len(structure.sites)
+        data = []
 
         for site in hubbard:
             kind_i = structure.sites[site['atom_index']].kind_name
@@ -79,16 +74,16 @@ class HpResultsModel(ResultsModel):
             value = round(site['value'], 2)
 
             data.append(
-                [
-                    site['hubbard_type'],
-                    f"{kind_i}-{site['atom_manifold']}",
-                    f"{kind_j}-{site['neighbour_manifold']}",
-                    index_i,
-                    index_j,
-                    value,
-                    site['translation'],
-                    distance,
-                ]
+                {
+                    'hubbard_type': site['hubbard_type'],
+                    'atom_manifold_i': f"{kind_i}-{site['atom_manifold']}",
+                    'atom_manifold_j': f"{kind_j}-{site['neighbour_manifold']}",
+                    'atom_index_i': index_i,
+                    'atom_index_j': index_j,
+                    'value': value,
+                    'translation': site['translation'],
+                    'distance': distance,
+                }
             )
 
-        return data
+        return {'columns': columns, 'data': data}

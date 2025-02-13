@@ -10,7 +10,7 @@ from .model import HPSettingsModel  # import the model you just created
 
 
 class HPSettingsPanel(ConfigurationSettingsPanel[HPSettingsModel]):
-    """Panel (view/controller) for HPC plugin, built against HPSettingsModel."""
+    """Panel (view/controller) for HP plugin, built against HPSettingsModel."""
 
     # Pre-defined HTML help strings:
     one_shot_description = """<div>Single calculation without iterative self-consistent procedure, no structural optimization. </div>"""

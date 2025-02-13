@@ -13,7 +13,7 @@ class HPSettingsModel(ConfigurationSettingsModel, HasInputStructure):
         'workchain.protocol',
     ]
 
-    # Basic HPC traitlets
+    # Basic HP traitlets
     method = tl.Unicode(default_value='one-shot')
     calculation_type = tl.Unicode(default_value='DFT+U')
     projector_type = tl.Unicode(default_value='ortho-atomic')

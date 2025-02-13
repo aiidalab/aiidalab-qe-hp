@@ -10,34 +10,27 @@ from table_widget import TableWidget
 from .model import HpResultsModel
 
 class HpResultsPanel(ResultsPanel[HpResultsModel]):
-    """
-    The 'View/Controller' for displaying HPC results.
-
-    In MVC terms:
-    - This panel is the View + minimal Controller logic.
-    - The HPC data (structure, table rows) is in HpResultsModel.
+    """The 'View/Controller' for displaying HP results.
     """
 
     def _render(self):
-        """
-        Render the HPC result panel UI elements. Called automatically
-        when the parent sets .render() or displays the widget.
-        """
-        # 1) Fetch the HPC results from the model
         self._model.fetch_result()
-        # The HPC structure and table_data are now stored in the model traitlets.
         self.hubbard_structure = self._model.hubbard_structure
 
-        # 2) Build the table widget
         self.result_table = TableWidget()
-        self.result_table.data = self._model.table_data
-        self.result_table.observe(self._on_table_row_clicked, 'row_index')
+        self.result_table.from_data(
+            self._model.table_data['data'],
+            columns=self._model.table_data['columns']
+        )
+        self.result_table.observe(self.on_single_row_select, 'selectedRowId')
 
-        # 3) Build the 3D structure viewer
         guiConfig = {
-            'enabled': True,
-            'components': {'atomsControl': True, 'buttons': True},
+            'components': {
+                'enabled': True,
+                'atomsControl': True,
+                'buttons': True},
             'buttons': {
+                'enabled': True,
                 'fullscreen': True,
                 'download': True,
                 'measurement': True,
@@ -46,7 +39,6 @@ class HpResultsPanel(ResultsPanel[HpResultsModel]):
         self.structure_view = WeasWidget(guiConfig=guiConfig)
         self.structure_view_ready = False
 
-        # 4) Build help text for table and structure
         table_help = ipw.HTML(
             """
             <div style='margin: 10px 0;'>
@@ -72,15 +64,15 @@ class HpResultsPanel(ResultsPanel[HpResultsModel]):
             layout=ipw.Layout(margin='0 0 20px 0'),
         )
 
-        # 5) Build and display the supercell in the viewer
         self._update_structure(self.hubbard_structure)
+        self.output = ipw.HTML('HP results are ready.')
 
-        # 6) Arrange everything
         self.children = [
             ipw.VBox(
                 children=[
                     ipw.VBox([table_help, self.result_table]),
                     ipw.VBox([structure_help, self.structure_view]),
+                    self.output,
                 ],
                 layout=ipw.Layout(justify_content='space-between', margin='10px'),
             )
@@ -88,24 +80,18 @@ class HpResultsPanel(ResultsPanel[HpResultsModel]):
 
         self.rendered = True
 
-    def _on_table_row_clicked(self, change):
-        """
-        Callback when the user selects a row in the HPC results table,
-        so we highlight the corresponding atoms in the 3D viewer.
+    def on_single_row_select(self, change):
+        """Highlight the corresponding atoms in the 3D viewer.
         """
         if change['new'] is not None:
-            row_index = change['new']
-            # HPC table_data: row 0 is a header, so actual data starts at row 1
-            # The columns 3 and 4 are "Index (I)" and "Index (J)"
-            # We want the newly selected row, plus 1 offset for the header
-            selected_atoms_indices = [
-                idx - 1 for idx in self.result_table.data[row_index + 1][3:5]
-            ]
-            self.structure_view.avr.selected_atoms_indices = selected_atoms_indices
+            row_index = int(change['new'])
+            atom_index_i = self.result_table.data[row_index]['atom_index_i']
+            atom_index_j = self.result_table.data[row_index]['atom_index_j']
+            self.structure_view.avr.selected_atoms_indices = [atom_index_i - 1, atom_index_j - 1]
 
             # Reposition the camera:
             self.structure_view.camera.look_at = self.hubbard_structure.sites[
-                selected_atoms_indices[0]
+                atom_index_i - 1
             ].position
 
             # If this is the first time, trigger a resize event in the viewer
