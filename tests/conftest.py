@@ -22,9 +22,9 @@ def LiCoO2():
 
 @pytest.fixture
 def pw_code():
-    return orm.load_code('pw-7.2@localhost')
+    return orm.load_code('pw-7.4@localhost')
 
 
 @pytest.fixture
 def hp_code():
-    return orm.load_code('hp-7.2@localhost')
+    return orm.load_code('hp-7.4@localhost')

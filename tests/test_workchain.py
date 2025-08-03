@@ -1,27 +1,35 @@
 def test_workchain(LiCoO2, pw_code, hp_code):
     from aiidalab_qe_hp.workchain import get_builder
-    from aiidalab_qe_hp.setting import Setting
+    from aiidalab_qe_hp.setting import HPSettingsPanel
+    from aiidalab_qe_hp.model import HPSettingsModel
     from aiida.engine import run
 
+    model = HPSettingsModel()
     structure = LiCoO2
-    setting = Setting()
-    setting.input_structure = LiCoO2
-    setting.calculation_type.value = 'DFT+U+V'
-    setting.hubbard_u_map['Co'][0].value = True
-    setting.hubbard_u_map['Co'][2].value = '3d'
-    setting.hubbard_u_map['Co'][3].value = 3.0
-    setting.hubbard_v_map[('Co', 'O')][0].value = True
-    setting.hubbard_v_map[('Co', 'O')][2].value = '3d'
-    setting.hubbard_v_map[('Co', 'O')][4].value = '2p'
-    setting.hubbard_v_map[('Co', 'O')][5].value = 1.0
+    model.input_structure = structure
+    model.calculation_type = 'DFT+U+V'
+    model.hubbard_u = [['Co', '3d', 3.0]]
+    model.hubbard_v = [['Co', '3d', 'O', '2p', 1.0]]
+    model.protocol = 'fast'
 
     codes = {
-        'pw': pw_code,
-        'hp': hp_code,
+        'pw': {'code': pw_code,
+               'nodes': 1,
+               'ntasks_per_node': 1,
+               'cpus_per_task': 1,
+               'max_wallclock_seconds': 3600
+               },
+
+        'hp': {'code': hp_code,
+               'nodes': 1,
+               'ntasks_per_node': 1,
+               'cpus_per_task': 1,
+               'max_wallclock_seconds': 3600
+               },
     }
 
     parameters = {
-        'hp': setting.get_panel_value(),
+        'hp': model.get_model_state(),
         'workchain': {
             'protocol': 'fast',
             'relax_type': 'none',
