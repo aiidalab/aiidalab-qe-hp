@@ -26,15 +26,22 @@ Click the `Confirm` button to proceed.
 Step 2 Configure workflow
 --------------------------------
 
-In the **Basic Settings** tab, set the following parameters:
+In the **Configure workflow** tab, set the following parameters:
 
 - In the **Structure optimization** section, select ``Structure as is``.
-- Set **Electronic Type** to ``Insulator``
 - In the **properties** section, select ``Hubbard parameter (HP)``
+
+
+.. image:: _static/images/hp_step_2_select_property.png
+   :align: center
+
+In the **Basic Settings** tab, set the following parameters:
+
+- Set **Electronic Type** to ``Insulator``
+- Set **Protocol** to ``Fast``
 
 .. image:: _static/images/hp_step_2_basic_setting.png
    :align: center
-
 
 Then go to the **HP setting** tab and, in the **Select atoms for which on-site Hubbard U must be computed** section, select ``Co`` by ticking the appropriate box.
 Set the **Manifold** to ``3d``.

@@ -1,14 +1,20 @@
-# aiidalab-qe-hp
+# AiiDAlab QE app Hubbard parameters plugin
 
-A plugin for running hp calculations inside the AiiDAlab Quantum ESPRESSO App.
+A plugin for running Hubbard parameters calculations inside the AiiDAlab Quantum ESPRESSO App.
 
 
 ## Installation
+You can install the plugin from the `Plugin store` of the AiiDAlab QE app.
 
-First install the `aiida-quantumespresso-hp` plugin, then clone this repository and install it with pip:
+If you want to install manually, run
 
 ```shell
-git clone https://github.com/aiidateam/aiida-quantumespresso-hp.git
-cd aiida-quantumespresso-hp
-pip install -e .
+pip install aiidalab-qe-hp
 ```
+then restart the AiiDA daemon
+```shell
+verdi daemon restart
+```
+
+## Documentation
+Please refer to the [documentation](https://aiidalab-qe-hp.readthedocs.io/en/latest/) for more information on how to use this plugin.
