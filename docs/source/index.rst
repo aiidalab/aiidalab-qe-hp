@@ -17,12 +17,27 @@ Contents
 How to cite
 ===========
 
-If you use the package for research, please follow these links to:
+If you use this plugin in your research, please cite:
 
-- `cite AiiDA HP workflow <https://github.com/aiidateam/aiida-quantumespresso-hp>`_
-- `cite AiiDA <https://aiida.readthedocs.io/projects/aiida-core/en/latest/#how-to-cite>`_
-- `cite AiiDAlab <https://aiidalab.readthedocs.io/en/latest/index.html#how-to-cite>`_
-- `cite Quantum ESPRESSO <https://www.quantum-espresso.org/Doc/user_guide/node6.html>`_
+.. raw:: html
+
+   <div style="padding: 6px 20px 0;">
+
+Wang, X., Bainglass, E., Bonacci, M., Ortega-Guerrero, A. *et al.*  
+*Making atomistic materials calculations accessible with the AiiDAlab Quantum ESPRESSO app*  
+*npj. Comput. Mater.* **12**, 72 (2026).  
+https://doi.org/10.1038/s41524-025-01936-4
+
+|
+
+Bastonero, L., Malica, C., Macke, E., Bercx, M., Huber, S., Timrov, I., Marzari, N.  
+*First-principles Hubbard parameters with automated and reproducible workflows*  
+*npj. Comput. Mater.* **11**, 183 (2025).  
+https://doi.org/10.1038/s41524-025-01685-4
+
+.. raw:: html
+
+   </div>
 
 ----
 
