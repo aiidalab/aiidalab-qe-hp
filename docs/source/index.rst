@@ -23,16 +23,16 @@ If you use this plugin in your research, please cite:
 
    <div style="padding: 6px 20px 0;">
 
-Wang, X., Bainglass, E., Bonacci, M., Ortega-Guerrero, A. *et al.*  
-*Making atomistic materials calculations accessible with the AiiDAlab Quantum ESPRESSO app*  
-*npj. Comput. Mater.* **12**, 72 (2026).  
+Wang, X., Bainglass, E., Bonacci, M., Ortega-Guerrero, A. *et al.*
+*Making atomistic materials calculations accessible with the AiiDAlab Quantum ESPRESSO app*
+*npj. Comput. Mater.* **12**, 72 (2026).
 https://doi.org/10.1038/s41524-025-01936-4
 
 |
 
-Bastonero, L., Malica, C., Macke, E., Bercx, M., Huber, S., Timrov, I., Marzari, N.  
-*First-principles Hubbard parameters with automated and reproducible workflows*  
-*npj. Comput. Mater.* **11**, 183 (2025).  
+Bastonero, L., Malica, C., Macke, E., Bercx, M., Huber, S., Timrov, I., Marzari, N.
+*First-principles Hubbard parameters with automated and reproducible workflows*
+*npj. Comput. Mater.* **11**, 183 (2025).
 https://doi.org/10.1038/s41524-025-01685-4
 
 .. raw:: html
