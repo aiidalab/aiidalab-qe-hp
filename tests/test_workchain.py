@@ -3,7 +3,6 @@ from aiidalab_qe_hp.workchain import get_builder
 
 
 def test_workchain(test_structure, pw_code, hp_code):
-
     model = HpSettingsModel()
     model.structure_uuid = test_structure.uuid
     model.calculation_type = 'DFT+U+V'

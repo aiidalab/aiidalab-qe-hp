@@ -18,7 +18,7 @@ class HpResultsPanel(ResultsPanel[HpResultsModel]):
         self.result_table.from_data(self._model.table_data['data'], columns=self._model.table_data['columns'])
         self.result_table.observe(self.on_single_row_select, 'selectedRowId')
 
-        guiConfig = {
+        gui_config = {
             'components': {'enabled': True, 'atomsControl': True, 'buttons': True},
             'buttons': {
                 'enabled': True,
@@ -27,7 +27,7 @@ class HpResultsPanel(ResultsPanel[HpResultsModel]):
                 'measurement': True,
             },
         }
-        self.structure_view = WeasWidget(guiConfig=guiConfig)
+        self.structure_view = WeasWidget(guiConfig=gui_config)
         self.structure_view_ready = False
 
         table_help = ipw.HTML(
@@ -113,7 +113,7 @@ class HpResultsPanel(ResultsPanel[HpResultsModel]):
                     atoms_copy.translate(np.dot([i + 1, j + 1, k + 1], atoms0.cell))
                     atoms.extend(atoms_copy)
 
-        # Expand the cell to 3× the original in each lattice direction
+        # Expand the cell to 3x the original in each lattice direction
         atoms.cell = np.array([3 * atoms.cell[c] for c in range(3)])
 
         self.structure_view.from_ase(atoms)

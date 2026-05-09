@@ -90,24 +90,26 @@ filterwarnings = [
 ]
 
 [tool.ruff]
+line-length = 120
+
+[tool.ruff.format]
+quote-style = 'single'
+
+[tool.ruff.lint]
 ignore = [
   'D203',  # Incompatible with D211 `no-blank-line-before-class`
-  'D213'  # Incompatible with D212 `multi-line-summary-second-line`
+  'D213',  # Incompatible with D212 `multi-line-summary-second-line`
+  'RUF012',  # Mutable class attributes should be annotated with `typing.ClassVar`
 ]
-line-length = 120
 select = [
   'E',  # pydocstyle
   'W',  # pydocstyle
   'F',  # pyflakes
   'I',  # isort
   'N',  # pep8-naming
-  'D',  # pydocstyle
   'PLC',  # pylint-convention
   'PLE',  # pylint-error
   'PLR',  # pylint-refactor
   'PLW',  # pylint-warning
   'RUF'  # ruff
 ]
-
-[tool.ruff.format]
-quote-style = 'single'

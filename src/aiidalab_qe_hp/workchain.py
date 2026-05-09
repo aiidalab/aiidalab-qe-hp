@@ -45,7 +45,6 @@ def update_resources(builder, codes):
 
 
 def get_builder(codes, structure, parameters, **kwargs):
-
     pw_code = codes.get('pw')['code']
     hp_code = codes.get('hp')['code']
     check_codes(pw_code, hp_code)
