@@ -7,6 +7,7 @@ build:
     nodejs: '20' # maybe need to be also miniconda
   jobs:
     post_create_environment:
+    - python -m pip uninstall -y typing-extensions
     - python -m pip install --no-cache-dir .[docs]
     - python -m pip install --exists-action=w --no-cache-dir -r docs/requirements.txt
     - rabbitmq-server -detached
