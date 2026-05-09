@@ -47,4 +47,4 @@ jobs:
       run: pip install -e .[dev]
 
     - name: Run tests
-      run: pytest --cov=src --cov-report=xml
+      run: pytest
