@@ -39,9 +39,9 @@ requires-python = '>=3.9'
 [project.optional-dependencies]
 dev = [
   'mypy==1.6.1',
-  'pre-commit',
-  'pytest~=6.2',
-  'pytest-regressions'
+  'pre-commit~=3.2',
+  'pytest~=7.4',
+  'pytest-regressions~=2.2'
 ]
 docs = [
   'myst-parser',
