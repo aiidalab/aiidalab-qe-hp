@@ -1,12 +1,8 @@
-from aiida_quantumespresso.data.hubbard_structure import HubbardStructureData
-from aiida_quantumespresso.common.types import ElectronicType, SpinType, RelaxType
-from aiida_hubbard.workflows.hubbard import SelfConsistentHubbardWorkChain
 from aiida import orm
-from aiidalab_qe.utils import (
-    enable_pencil_decomposition,
-    set_component_resources,
-)
-
+from aiida_hubbard.workflows.hubbard import SelfConsistentHubbardWorkChain
+from aiida_quantumespresso.common.types import ElectronicType, RelaxType, SpinType
+from aiida_quantumespresso.data.hubbard_structure import HubbardStructureData
+from aiidalab_qe.utils import set_component_resources
 
 PROTOCOL_MAP_U = {'fast': 1.0, 'balanced': 0.5, 'stringent': 0.1}
 
@@ -49,7 +45,6 @@ def update_resources(builder, codes):
 
 
 def get_builder(codes, structure, parameters, **kwargs):
-
 
     pw_code = codes.get('pw')['code']
     hp_code = codes.get('hp')['code']
