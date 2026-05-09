@@ -1,11 +1,9 @@
 import io
 
 import pytest
-from aiida import load_profile, orm
+from aiida import orm
 from aiida_pseudo.data.pseudo import UpfData
 from aiida_pseudo.groups.family import SsspFamily
-
-load_profile()
 
 pytest_plugins = ['aiida.tools.pytest_fixtures']
 
