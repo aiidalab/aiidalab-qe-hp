@@ -44,13 +44,9 @@ dev = [
   'pytest-regressions~=2.2'
 ]
 docs = [
-  'myst-parser',
-  'pydata-sphinx-theme~=0.14.3',
-  'sphinx~=7.2',
-  'sphinx-copybutton~=0.5.0',
-  'sphinx-click~=4.0',
-  'sphinx-design~=0.5.0',
-  'sphinx-favicon'
+  'sphinx~=4.5.0',
+  'sphinx-design~=0.4.1',
+  'pydata-sphinx-theme~=0.13.3'
 ]
 
 [project.urls]
