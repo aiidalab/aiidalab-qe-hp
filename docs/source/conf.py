@@ -62,16 +62,18 @@ html_theme = 'pydata_sphinx_theme'
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ['_static']
 
+repo_url = 'https://github.com/aiidalab/aiidalab-qe-hp'
+
 # Using this instead of `html_logo` to handle light/dark modes
 # See https://pydata-sphinx-theme.readthedocs.io
 html_theme_options = {
-    'source_repository': 'https://github.com/aiidaplugins/aiida-qe-xspec/',
+    'source_repository': repo_url,
     'source_branch': 'main',
     'source_directory': 'docs/source',
     'footer_icons': [
         {
             'name': 'GitHub',
-            'url': 'https://github.com/aiidaplugins/aiida-qe-xspec',
+            'url': repo_url,
             'icon': 'fa-brands fa-square-github',
             'type': 'fontawesome',
         },
