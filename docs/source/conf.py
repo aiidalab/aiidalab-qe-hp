@@ -21,7 +21,7 @@ sys.path.insert(0, os.path.abspath('../..'))
 
 project = 'AiiDAlab QE HP Plugin'
 copyright_owners = 'The AiiDAlab Team'
-copyright_first_year = '2026'
+copyright_first_year = '2024'
 current_year = str(time.localtime().tm_year)
 copyright_year_string = (
     current_year if current_year == copyright_first_year else f'{copyright_first_year}-{current_year}'
