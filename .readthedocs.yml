@@ -1,25 +1,13 @@
 version: 2
 
+sphinx:
+  configuration: docs/source/conf.py
+
 build:
   os: ubuntu-22.04
   tools:
-    python: miniconda3-3.12-24.1   # note that libmamba-solver is available since 22.1
-    nodejs: '20' # maybe need to be also miniconda
+    python: '3.11'
   jobs:
     post_create_environment:
-    - python -m pip uninstall -y typing-extensions
     - python -m pip install --no-cache-dir .[docs]
     - python -m pip install --exists-action=w --no-cache-dir -r docs/requirements.txt
-    - rabbitmq-server -detached
-    - sleep 5
-    - rabbitmq-diagnostics status
-    - verdi presto
-    - verdi daemon start
-    - verdi status
-
-conda:
-  environment: docs/environment.yml
-
-# Build from the docs/ directory with Sphinx
-sphinx:
-  configuration: docs/source/conf.py
