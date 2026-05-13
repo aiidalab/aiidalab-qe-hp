@@ -18,7 +18,7 @@ class HpResultsModel(ResultsModel):
 
     def fetch_result(self):
         """Fetch the HP results from the process node and populate the traitlets."""
-        process = self.fetch_process_node()
+        process = self.process
         if 'relax' not in process.inputs.hp:
             self.hubbard_structure = process.outputs.hp.hubbard_structure
         else:
