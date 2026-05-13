@@ -49,10 +49,17 @@ class HpSettingsModel(PanelModel, HasInputStructure):
         self.calculation_type_options = options
 
     @tl.observe('protocol')
-    def update_qpoints_distance_from_protocol(self, change):
-        parameters = PwBaseWorkChain.get_protocol_inputs(change['new'])
-        if 'kpoints_distance' in parameters:
-            self.qpoints_distance = parameters['kpoints_distance'] * 4
+    def update_qpoints_distance_from_protocol(self, _=None):
+        if self.protocol is not None:
+            parameters = PwBaseWorkChain.get_protocol_inputs(self.protocol)
+            if 'kpoints_distance' in parameters:
+                self.qpoints_distance = parameters['kpoints_distance'] * 4
+
+    @tl.observe('qpoints_override')
+    def update_qpoints_distance(self, change):
+        if not change['new']:
+            # Reset to protocol value if override is turned off
+            self.update_qpoints_distance_from_protocol()
 
     def get_model_state(self) -> dict:
         """Return a dictionary capturing the current model state."""
