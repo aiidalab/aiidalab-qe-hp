@@ -7,7 +7,7 @@ from aiidalab_qe.common.panel import (
 )
 
 
-class ResourceSettingsModel(PluginResourceSettingsModel):
+class HpResourceSettingsModel(PluginResourceSettingsModel):
     """Model for the hp code setting plugin."""
 
     title = 'hp'
@@ -31,7 +31,7 @@ class ResourceSettingsModel(PluginResourceSettingsModel):
         )
 
 
-class ResourceSettingsPanel(
-    PluginResourceSettingsPanel[ResourceSettingsModel],
+class HpResourceSettingsPanel(
+    PluginResourceSettingsPanel[HpResourceSettingsModel],
 ):
     """Panel for configuring the hp plugin."""

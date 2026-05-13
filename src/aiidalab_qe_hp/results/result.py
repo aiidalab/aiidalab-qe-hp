@@ -1,34 +1,25 @@
-# hp_results_panel.py
-
 import ipywidgets as ipw
 import numpy as np
 from aiidalab_qe.common.panel import ResultsPanel
+from table_widget import TableWidget
 from weas_widget import WeasWidget
 
-# Suppose you have your own custom table widget:
-from table_widget import TableWidget
 from .model import HpResultsModel
 
+
 class HpResultsPanel(ResultsPanel[HpResultsModel]):
-    """The 'View/Controller' for displaying HP results.
-    """
+    """The 'View/Controller' for displaying HP results."""
 
     def _render(self):
         self._model.fetch_result()
         self.hubbard_structure = self._model.hubbard_structure
 
         self.result_table = TableWidget()
-        self.result_table.from_data(
-            self._model.table_data['data'],
-            columns=self._model.table_data['columns']
-        )
+        self.result_table.from_data(self._model.table_data['data'], columns=self._model.table_data['columns'])
         self.result_table.observe(self.on_single_row_select, 'selectedRowId')
 
-        guiConfig = {
-            'components': {
-                'enabled': True,
-                'atomsControl': True,
-                'buttons': True},
+        gui_config = {
+            'components': {'enabled': True, 'atomsControl': True, 'buttons': True},
             'buttons': {
                 'enabled': True,
                 'fullscreen': True,
@@ -36,7 +27,7 @@ class HpResultsPanel(ResultsPanel[HpResultsModel]):
                 'measurement': True,
             },
         }
-        self.structure_view = WeasWidget(guiConfig=guiConfig)
+        self.structure_view = WeasWidget(guiConfig=gui_config)
         self.structure_view_ready = False
 
         table_help = ipw.HTML(
@@ -81,8 +72,7 @@ class HpResultsPanel(ResultsPanel[HpResultsModel]):
         self.rendered = True
 
     def on_single_row_select(self, change):
-        """Highlight the corresponding atoms in the 3D viewer.
-        """
+        """Highlight the corresponding atoms in the 3D viewer."""
         if change['new'] is not None:
             row_index = int(change['new'])
             atom_index_i = self.result_table.data[row_index]['atom_index_i']
@@ -90,15 +80,11 @@ class HpResultsPanel(ResultsPanel[HpResultsModel]):
             self.structure_view.avr.selected_atoms_indices = [atom_index_i - 1, atom_index_j - 1]
 
             # Reposition the camera:
-            self.structure_view.camera.look_at = self.hubbard_structure.sites[
-                atom_index_i - 1
-            ].position
+            self.structure_view.camera.look_at = self.hubbard_structure.sites[atom_index_i - 1].position
 
             # If this is the first time, trigger a resize event in the viewer
             if not self.structure_view_ready:
-                self.structure_view._widget.send_js_task(
-                    {'name': 'tjs.onWindowResize', 'kwargs': {}}
-                )
+                self.structure_view._widget.send_js_task({'name': 'tjs.onWindowResize', 'kwargs': {}})
                 self.structure_view._widget.send_js_task(
                     {
                         'name': 'tjs.updateCameraAndControls',
@@ -108,9 +94,9 @@ class HpResultsPanel(ResultsPanel[HpResultsModel]):
                 self.structure_view_ready = True
 
     def _update_structure(self, hubbard_structure):
-        """
-        Build a large supercell around the original structure for
-        better visualization, and load it into the 3D viewer.
+        """Build a large supercell around the original structure.
+
+        For better visualization. Also loads the structure into the 3D viewer.
         """
         atoms0 = hubbard_structure.get_ase()
         atoms = atoms0.copy()
@@ -127,7 +113,7 @@ class HpResultsPanel(ResultsPanel[HpResultsModel]):
                     atoms_copy.translate(np.dot([i + 1, j + 1, k + 1], atoms0.cell))
                     atoms.extend(atoms_copy)
 
-        # Expand the cell to 3× the original in each lattice direction
+        # Expand the cell to 3x the original in each lattice direction
         atoms.cell = np.array([3 * atoms.cell[c] for c in range(3)])
 
         self.structure_view.from_ase(atoms)

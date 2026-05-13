@@ -1,31 +1,30 @@
-"""Web GUI for Quantum ESPRESSO and hp calculations in AiiDA."""
+"""AiiDALab plugin for Quantum ESPRESSO Hubbard parameters (HP) calculations."""
+
 from aiidalab_qe.common.panel import PluginOutline
 
-from .model import HPSettingsModel
-from .resources import ResourceSettingsModel, ResourceSettingsPanel
-from .setting import HPSettingsPanel
+from .model import HpSettingsModel
+from .resources import HpResourceSettingsModel, HpResourceSettingsPanel
+from .results import HpResultsModel, HpResultsPanel
+from .settings import HpSettingsPanel
 from .workchain import workchain_and_builder
-from .result import HpResultsPanel, HpResultsModel
-
 
 __version__ = '0.1.3'
 
 
-
-class PluginOutline(PluginOutline):
+class HpPluginOutline(PluginOutline):
     title = 'Hubbard parameter (HP)'
     help = """"""
 
 
 hp = {
-    'outline': PluginOutline,
+    'outline': HpPluginOutline,
     'configuration': {
-        'panel': HPSettingsPanel,
-        'model': HPSettingsModel,
+        'panel': HpSettingsPanel,
+        'model': HpSettingsModel,
     },
     'resources': {
-        'panel': ResourceSettingsPanel,
-        'model': ResourceSettingsModel,
+        'panel': HpResourceSettingsPanel,
+        'model': HpResourceSettingsModel,
     },
     'workchain': workchain_and_builder,
     'result': {
