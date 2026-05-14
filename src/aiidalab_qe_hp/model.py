@@ -47,6 +47,7 @@ class HpSettingsModel(PanelModel, HasInputStructure):
         num_atoms = len(self.input_structure.sites) if self.has_structure else 0
         options = ['DFT+U', 'DFT+U+V'] if num_atoms > 1 else ['DFT+U']
         self.calculation_type_options = options
+        self._initialize_hubbard_lists()
 
     @tl.observe('protocol')
     def update_qpoints_distance_from_protocol(self, _=None):
@@ -72,8 +73,8 @@ class HpSettingsModel(PanelModel, HasInputStructure):
             'qpoints_override': self.qpoints_override,
             'parallelize_atoms': self.parallelize_atoms,
             'parallelize_qpoints': self.parallelize_qpoints,
-            'hubbard_u': self.hubbard_u,
-            'hubbard_v': self.hubbard_v,
+            'hubbard_u': self._get_active_hubbard_u(),
+            'hubbard_v': self._get_active_hubbard_v(),
         }
 
     def set_model_state(self, parameters: dict):
@@ -86,5 +87,55 @@ class HpSettingsModel(PanelModel, HasInputStructure):
         self.qpoints_override = parameters.get('qpoints_override', False)
         self.parallelize_atoms = parameters.get('parallelize_atoms', True)
         self.parallelize_qpoints = parameters.get('parallelize_qpoints', True)
-        self.hubbard_u = parameters.get('hubbard_u', [])
-        self.hubbard_v = parameters.get('hubbard_v', [])
+        self.hubbard_u = self._set_active_hubbard_u(parameters.get('hubbard_u', []))
+        self.hubbard_v = self._set_active_hubbard_v(parameters.get('hubbard_v', []))
+
+    def _get_active_hubbard_u(self):
+        """Return only the active Hubbard U entries (e.g. those with non-empty manifold)."""
+        return [entry for entry in self.hubbard_u if entry[1] != '']
+
+    def _get_active_hubbard_v(self):
+        """Return only the active Hubbard V entries (e.g. those with non-empty manifolds)."""
+        return [entry for entry in self.hubbard_v if entry[1] != '' and entry[3] != '']
+
+    def _set_active_hubbard_u(self, active_u):
+        """Update default values with active entries."""
+        updated_u = []
+        for entry in self.hubbard_u:
+            kind_name = entry[0]
+            active_entry = next((e for e in active_u if e[0] == kind_name), None)
+            if active_entry:
+                updated_u.append(active_entry)
+            else:
+                updated_u.append(entry)
+        return updated_u
+
+    def _set_active_hubbard_v(self, active_v):
+        """Update default values with active entries."""
+        updated_v = []
+        for entry in self.hubbard_v:
+            kind1, _, kind2, _, _ = entry
+            active_entry = next((e for e in active_v if e[0] == kind1 and e[2] == kind2), None)
+            if active_entry:
+                updated_v.append(active_entry)
+            else:
+                updated_v.append(entry)
+        return updated_v
+
+    def _initialize_hubbard_lists(self):
+        """Initialize the Hubbard U and V lists based on the current structure."""
+        if not self.has_structure:
+            self.hubbard_u = []
+            self.hubbard_v = []
+            return
+
+        kind_names = self.input_structure.get_kind_names()
+
+        self.hubbard_u = [[kn, '', 0.0] for kn in kind_names]
+
+        self.hubbard_v = [
+            [kn1, '', kn2, '', 0.0]
+            for i in range(len(kind_names))
+            for j in range(i + 1, len(kind_names))
+            for kn1, kn2 in [(kind_names[i], kind_names[j])]
+        ]

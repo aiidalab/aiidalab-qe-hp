@@ -187,16 +187,22 @@ class HpSettingsPanel(ConfigurationSettingsPanel[HpSettingsModel]):
 
         self.Hubbard_U_title = ipw.HTML("""
             <div style="padding-top: 0px; padding-bottom: 0px">
-                <h4>Select atoms for which on-site Hubbard U must be computed</h4>
+                <h4>Hubbard U</h4>
+                <div style="line-height: 1.5">
+                    Select atoms for which on-site Hubbard U must be computed.<br>
+                    <b>Only rows with a non-empty manifold will be included in the calculation.</b>
+                </div>
             </div>
         """)
         self.hubbard_u = ipw.VBox()
 
         self.Hubbard_V_title = ipw.HTML("""
             <div style="padding-top: 0px; padding-bottom: 0px">
-                <h4>
-                    Select couples of atoms for which inter-site Hubbard V must be computed
-                </h4>
+                <h4>Hubbard V</h4>
+                <div style="line-height: 1.5">
+                    Select couples of atoms for which inter-site Hubbard V must be computed.<br>
+                    <b>Only rows with a non-empty manifold for both atoms will be included in the calculation.</b>
+                </div>
             </div>
         """)
         self.hubbard_v = ipw.VBox()
@@ -246,11 +252,11 @@ class HpSettingsPanel(ConfigurationSettingsPanel[HpSettingsModel]):
         self._toggle_calculation_type_description()
         self._toggle_projector_type_description()
         self._update_qpoints_mesh()
-        self._update_hubbard_tables()
+        self._build_hubbard_tables()
 
     def _on_input_structure_change(self, _):
         self._update_qpoints_mesh()
-        self._update_hubbard_tables()
+        self._build_hubbard_tables()
 
     def _on_protocol_change(self, _):
         self._model.update(specific='protocol')
@@ -265,7 +271,7 @@ class HpSettingsPanel(ConfigurationSettingsPanel[HpSettingsModel]):
         if not self.rendered:
             return
         self._toggle_calculation_type_description()
-        self._update_hubbard_tables()
+        self._build_hubbard_tables()
 
     def _on_projector_type_change(self, _):
         if not self.rendered:
@@ -312,11 +318,11 @@ class HpSettingsPanel(ConfigurationSettingsPanel[HpSettingsModel]):
         else:
             self.qpoint_mesh.value = 'Please select a number > 0.0'
 
-    def _update_hubbard_tables(self):
-        self._generate_hubbard_u()
-        self._generate_hubbard_v()
+    def _build_hubbard_tables(self):
+        self._build_hubbard_u_table()
+        self._build_hubbard_v_table()
 
-    def _generate_hubbard_u(self):
+    def _build_hubbard_u_table(self):
         if not self.rendered:
             return
 
@@ -327,7 +333,6 @@ class HpSettingsPanel(ConfigurationSettingsPanel[HpSettingsModel]):
 
         header = ipw.HBox(
             children=[
-                ipw.HTML('', layout=ipw.Layout(width='30px')),
                 ipw.HTML('Type', layout=ipw.Layout(width='50px')),
                 ipw.HTML('Manifold', layout=ipw.Layout(width='80px')),
                 ipw.HTML('U value (eV)', layout=ipw.Layout(width='80px')),
@@ -335,21 +340,50 @@ class HpSettingsPanel(ConfigurationSettingsPanel[HpSettingsModel]):
         )
         rows = [header]
 
-        self._hubbard_u_map = {}
+        def update(kind_index, field_index, value):
+            hubbard_u = [*self._model.hubbard_u]
+            hubbard_u[kind_index][field_index] = value
+            return hubbard_u
 
-        for kind in structure.kinds:
+        for i, kind in enumerate(structure.kinds):
             kind_name = kind.name
-            checkbox = ipw.Checkbox(
-                False,
-                indent=False,
-                layout=ipw.Layout(width='30px'),
-            )
+
             manifold = ipw.Text('', layout=ipw.Layout(width='80px'))
+
+            def get_manifold(hubbard_u, i=i):
+                try:
+                    return hubbard_u[i][1]
+                except IndexError:
+                    return ''
+
+            ipw.link(
+                (self._model, 'hubbard_u'),
+                (manifold, 'value'),
+                [
+                    get_manifold,
+                    lambda value, i=i: update(i, 1, value),
+                ],
+            )
+
             u_val = ipw.FloatText(0.0, layout=ipw.Layout(width='80px'))
+
+            def get_u_val(hubbard_u, i=i):
+                try:
+                    return hubbard_u[i][2]
+                except IndexError:
+                    return 0.0
+
+            ipw.link(
+                (self._model, 'hubbard_u'),
+                (u_val, 'value'),
+                [
+                    get_u_val,
+                    lambda value, i=i: update(i, 2, value),
+                ],
+            )
 
             row = ipw.HBox(
                 children=[
-                    checkbox,
                     ipw.HTML(kind_name, layout=ipw.Layout(width='50px')),
                     manifold,
                     u_val,
@@ -357,21 +391,12 @@ class HpSettingsPanel(ConfigurationSettingsPanel[HpSettingsModel]):
             )
             rows.append(row)
 
-            def on_change(_):
-                self._assemble_hubbard_u()
-
-            checkbox.observe(on_change, 'value')
-            manifold.observe(on_change, 'value')
-            u_val.observe(on_change, 'value')
-
-            self._hubbard_u_map[kind_name] = (checkbox, manifold, u_val)
-
         self.hubbard_u.children = [
             self.Hubbard_U_title,
             *rows,
         ]
 
-    def _generate_hubbard_v(self):
+    def _build_hubbard_v_table(self):
         if not self.rendered:
             return
 
@@ -382,10 +407,8 @@ class HpSettingsPanel(ConfigurationSettingsPanel[HpSettingsModel]):
 
         header = ipw.HBox(
             children=[
-                ipw.HTML('', layout=ipw.Layout(width='30px')),
                 ipw.HTML('Type 1', layout=ipw.Layout(width='50px')),
                 ipw.HTML('Manifold 1', layout=ipw.Layout(width='80px')),
-                ipw.HTML('', layout=ipw.Layout(width='4px')),
                 ipw.HTML('Type 2', layout=ipw.Layout(width='50px')),
                 ipw.HTML('Manifold 2', layout=ipw.Layout(width='80px')),
                 ipw.HTML('V value (eV)', layout=ipw.Layout(width='80px')),
@@ -393,28 +416,72 @@ class HpSettingsPanel(ConfigurationSettingsPanel[HpSettingsModel]):
         )
         rows = [header]
 
-        self._hubbard_v_map = {}
-
         kind_names = [k.name for k in structure.kinds]
+
+        def get_hubbard_v_index(i, j):
+            """Given two indices i, j with i < j, return the corresponding index in the hubbard_v list."""
+            return i * len(kind_names) + j - ((i + 2) * (i + 1)) // 2
+
+        def update(kind1_index, kind2_index, field_index, value):
+            hubbard_v = [*self._model.hubbard_v]
+            index = get_hubbard_v_index(kind1_index, kind2_index)
+            hubbard_v[index][field_index] = value
+            return hubbard_v
+
         for i in range(len(kind_names)):
             for j in range(i + 1, len(kind_names)):
                 kind_name1 = kind_names[i]
                 kind_name2 = kind_names[j]
-                checkbox = ipw.Checkbox(
-                    False,
-                    indent=False,
-                    layout=ipw.Layout(width='30px'),
-                )
+
                 manifold1 = ipw.Text('', layout=ipw.Layout(width='80px'))
                 manifold2 = ipw.Text('', layout=ipw.Layout(width='80px'))
+
+                def get_manifold(hubbard_v, n, i=i, j=j):
+                    try:
+                        index = get_hubbard_v_index(i, j)
+                        return hubbard_v[index][n]
+                    except IndexError:
+                        return ''
+
+                ipw.link(
+                    (self._model, 'hubbard_v'),
+                    (manifold1, 'value'),
+                    [
+                        lambda hubbard_v, i=i, j=j: get_manifold(hubbard_v, 1, i, j),
+                        lambda value, i=i, j=j: update(i, j, 1, value),
+                    ],
+                )
+                ipw.link(
+                    (self._model, 'hubbard_v'),
+                    (manifold2, 'value'),
+                    [
+                        lambda hubbard_v, i=i, j=j: get_manifold(hubbard_v, 3, i, j),
+                        lambda value, i=i, j=j: update(i, j, 3, value),
+                    ],
+                )
+
                 v_val = ipw.FloatText(0.0, layout=ipw.Layout(width='80px'))
+
+                def get_v_val(hubbard_v, i=i, j=j):
+                    try:
+                        index = get_hubbard_v_index(i, j)
+                        return hubbard_v[index][4]
+                    except IndexError:
+                        return 0.0
+
+                ipw.link(
+                    (self._model, 'hubbard_v'),
+                    (v_val, 'value'),
+                    [
+                        lambda hubbard_v, i=i, j=j: get_v_val(hubbard_v, i, j),
+                        lambda value, i=i, j=j: update(i, j, 4, value),
+                    ],
+                )
 
                 row = ipw.HBox(
                     children=[
-                        checkbox,
                         ipw.HTML(kind_name1, layout=ipw.Layout(width='50px')),
                         manifold1,
-                        ipw.HTML('', layout=ipw.Layout(width='4px')),
                         ipw.HTML(kind_name2, layout=ipw.Layout(width='50px')),
                         manifold2,
                         v_val,
@@ -422,56 +489,7 @@ class HpSettingsPanel(ConfigurationSettingsPanel[HpSettingsModel]):
                 )
                 rows.append(row)
 
-                def on_change(_):
-                    self._assemble_hubbard_v()
-
-                for widget in (checkbox, manifold1, manifold2, v_val):
-                    widget.observe(on_change, 'value')
-
-                self._hubbard_v_map[(kind_name1, kind_name2)] = (
-                    checkbox,
-                    manifold1,
-                    manifold2,
-                    v_val,
-                )
-
         self.hubbard_v.children = [
             self.Hubbard_V_title,
             *rows,
         ]
-
-    def _assemble_hubbard_u(self):
-        """Rebuild the model.hubbard_u from the checkboxes/text fields."""
-        new_list = []
-        for kind_name, (
-            checkbox,
-            manifold,
-            u_val,
-        ) in self._hubbard_u_map.items():
-            if checkbox.value:
-                new_list.append([kind_name, manifold.value, max(u_val.value, 1e-10)])
-        self._model.hubbard_u = new_list
-
-    def _assemble_hubbard_v(self):
-        """Rebuild the model.hubbard_v from checkboxes/text fields."""
-        new_list = []
-        for (
-            kind_name1,
-            kind_name2,
-        ), (
-            checkbox,
-            manifold1,
-            manifold2,
-            v_val,
-        ) in self._hubbard_v_map.items():
-            if checkbox.value:
-                new_list.append(
-                    [
-                        kind_name1,
-                        manifold1.value,
-                        kind_name2,
-                        manifold2.value,
-                        max(v_val.value, 1e-10),
-                    ]
-                )
-        self._model.hubbard_v = new_list
