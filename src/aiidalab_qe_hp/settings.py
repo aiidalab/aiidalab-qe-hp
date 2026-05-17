@@ -319,6 +319,7 @@ class HpSettingsPanel(ConfigurationSettingsPanel[HpSettingsModel]):
             self.qpoint_mesh.value = 'Please select a number > 0.0'
 
     def _build_hubbard_tables(self):
+        self._unsubscribe()  # unlink existing table widgets
         self._build_hubbard_u_table()
         self._build_hubbard_v_table()
 
@@ -349,38 +350,26 @@ class HpSettingsPanel(ConfigurationSettingsPanel[HpSettingsModel]):
             kind_name = kind.name
 
             manifold = ipw.Text('', layout=ipw.Layout(width='80px'))
-
-            def get_manifold(hubbard_u, i=i):
-                try:
-                    return hubbard_u[i][1]
-                except IndexError:
-                    return ''
-
-            ipw.link(
+            link = ipw.link(
                 (self._model, 'hubbard_u'),
                 (manifold, 'value'),
                 [
-                    get_manifold,
+                    lambda hubbard_u, i=i: hubbard_u[i][1],
                     lambda value, i=i: update(i, 1, value),
                 ],
             )
+            self._links.append(link)
 
             u_val = ipw.FloatText(0.0, layout=ipw.Layout(width='80px'))
-
-            def get_u_val(hubbard_u, i=i):
-                try:
-                    return hubbard_u[i][2]
-                except IndexError:
-                    return 0.0
-
-            ipw.link(
+            link = ipw.link(
                 (self._model, 'hubbard_u'),
                 (u_val, 'value'),
                 [
-                    get_u_val,
+                    lambda hubbard_u, i=i: hubbard_u[i][2],
                     lambda value, i=i: update(i, 2, value),
                 ],
             )
+            self._links.append(link)
 
             row = ipw.HBox(
                 children=[
@@ -434,49 +423,37 @@ class HpSettingsPanel(ConfigurationSettingsPanel[HpSettingsModel]):
                 kind_name2 = kind_names[j]
 
                 manifold1 = ipw.Text('', layout=ipw.Layout(width='80px'))
-                manifold2 = ipw.Text('', layout=ipw.Layout(width='80px'))
-
-                def get_manifold(hubbard_v, n, i=i, j=j):
-                    try:
-                        index = get_hubbard_v_index(i, j)
-                        return hubbard_v[index][n]
-                    except IndexError:
-                        return ''
-
-                ipw.link(
+                link = ipw.link(
                     (self._model, 'hubbard_v'),
                     (manifold1, 'value'),
                     [
-                        lambda hubbard_v, i=i, j=j: get_manifold(hubbard_v, 1, i, j),
+                        lambda hubbard_v, i=i, j=j: hubbard_v[get_hubbard_v_index(i, j)][1],
                         lambda value, i=i, j=j: update(i, j, 1, value),
                     ],
                 )
-                ipw.link(
+                self._links.append(link)
+
+                manifold2 = ipw.Text('', layout=ipw.Layout(width='80px'))
+                link = ipw.link(
                     (self._model, 'hubbard_v'),
                     (manifold2, 'value'),
                     [
-                        lambda hubbard_v, i=i, j=j: get_manifold(hubbard_v, 3, i, j),
+                        lambda hubbard_v, i=i, j=j: hubbard_v[get_hubbard_v_index(i, j)][3],
                         lambda value, i=i, j=j: update(i, j, 3, value),
                     ],
                 )
+                self._links.append(link)
 
                 v_val = ipw.FloatText(0.0, layout=ipw.Layout(width='80px'))
-
-                def get_v_val(hubbard_v, i=i, j=j):
-                    try:
-                        index = get_hubbard_v_index(i, j)
-                        return hubbard_v[index][4]
-                    except IndexError:
-                        return 0.0
-
-                ipw.link(
+                link = ipw.link(
                     (self._model, 'hubbard_v'),
                     (v_val, 'value'),
                     [
-                        lambda hubbard_v, i=i, j=j: get_v_val(hubbard_v, i, j),
+                        lambda hubbard_v, i=i, j=j: hubbard_v[get_hubbard_v_index(i, j)][4],
                         lambda value, i=i, j=j: update(i, j, 4, value),
                     ],
                 )
+                self._links.append(link)
 
                 row = ipw.HBox(
                     children=[
