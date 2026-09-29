@@ -1,29 +1,32 @@
+import pytest
+
 from aiidalab_qe_hp.model import HpSettingsModel
 from aiidalab_qe_hp.workchain import get_builder
 
 
-def test_workchain(test_structure, pw_code, hp_code):
+@pytest.mark.parametrize('method', ['one-shot', 'self-consistent'])
+def test_workchain(test_structure, pw_code, hp_code, method):
     model = HpSettingsModel()
     model.structure_uuid = test_structure.uuid
     model.calculation_type = 'DFT+U+V'
     model.hubbard_u = [['Co', '3d', 3.0]]
     model.hubbard_v = [['Co', '3d', 'O', '2p', 1.0]]
     model.protocol = 'fast'
-    model.method = 'self-consistent'
+    model.method = method
 
     codes = {
         'pw': {
             'code': pw_code,
-            'nodes': 1,
-            'ntasks_per_node': 1,
-            'cpus_per_task': 1,
+            'nodes': 2,
+            'ntasks_per_node': 3,
+            'cpus_per_task': 4,
             'max_wallclock_seconds': 3600,
         },
         'hp': {
             'code': hp_code,
-            'nodes': 1,
-            'ntasks_per_node': 1,
-            'cpus_per_task': 1,
+            'nodes': 5,
+            'ntasks_per_node': 7,
+            'cpus_per_task': 8,
             'max_wallclock_seconds': 3600,
         },
     }
@@ -40,7 +43,20 @@ def test_workchain(test_structure, pw_code, hp_code):
     }
 
     builder = get_builder(codes, test_structure, parameters, **{})
-    for namespace in ('base_init_relax', 'base_relax'):
-        resources = builder.relax[namespace].pw.metadata.options.resources
-        assert resources['num_machines'] == 1
-        assert resources['num_mpiprocs_per_machine'] == 1
+
+    pw_resources = builder.scf.pw.metadata.options.resources
+    assert pw_resources['num_machines'] == 2
+    assert pw_resources['num_mpiprocs_per_machine'] == 3
+    assert pw_resources['num_cores_per_mpiproc'] == 4
+
+    hp_resources = builder.hubbard.hp.metadata.options.resources
+    assert hp_resources['num_machines'] == 5
+    assert hp_resources['num_mpiprocs_per_machine'] == 7
+    assert hp_resources['num_cores_per_mpiproc'] == 8
+
+    if method == 'self-consistent':
+        for namespace in ('base_init_relax', 'base_relax'):
+            resources = builder.relax[namespace].pw.metadata.options.resources
+            assert resources['num_machines'] == 2
+            assert resources['num_mpiprocs_per_machine'] == 3
+            assert resources['num_cores_per_mpiproc'] == 4
