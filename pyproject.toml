@@ -4,7 +4,7 @@ requires = ['flit_core>=3.4,<4']
 
 [project]
 authors = [
-  {name = 'Xing Wang', email = 'xingwang1991@gmail.com'}
+  { name = 'Xing Wang', email = 'xingwang1991@gmail.com' }
 ]
 classifiers = [
   'Development Status :: 4 - Beta',
@@ -27,7 +27,7 @@ dependencies = [
 ]
 dynamic = ['description', 'version']
 keywords = ['aiida', 'workflows', 'core-level', 'spectroscopy']
-license = {file = 'LICENSE'}
+license = { file = 'LICENSE' }
 name = 'aiidalab-qe-hp'
 readme = 'README.md'
 requires-python = '>=3.10'
