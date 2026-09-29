@@ -41,6 +41,10 @@ def test_workchain(test_structure, pw_code, hp_code):
 
     builder = get_builder(codes, test_structure, parameters, **{})
     for namespace in ('base_init_relax', 'base_relax'):
-        resources = builder.relax[namespace].pw.metadata.options.resources
+        component = builder.relax[namespace].pw
+        resources = component.metadata.options.resources
         assert resources['num_machines'] == 1
         assert resources['num_mpiprocs_per_machine'] == 1
+        assert component.settings.get_dict()['CMDLINE'] == ['-pd', '.true.']
+
+    assert builder.scf.pw.settings.get_dict()['CMDLINE'] == ['-pd', '.true.']
