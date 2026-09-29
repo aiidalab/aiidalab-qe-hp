@@ -3,9 +3,7 @@ build-backend = 'flit_core.buildapi'
 requires = ['flit_core>=3.4,<4']
 
 [project]
-authors = [
-  {name = 'Xing Wang', email = 'xingwang1991@gmail.com'}
-]
+authors = [{ name = 'Xing Wang', email = 'xingwang1991@gmail.com' }]
 classifiers = [
   'Development Status :: 4 - Beta',
   'Framework :: AiiDA',
@@ -13,25 +11,24 @@ classifiers = [
   'Operating System :: POSIX :: Linux',
   'Operating System :: MacOS :: MacOS X',
   'Programming Language :: Python',
-  'Programming Language :: Python :: 3.9',
   'Programming Language :: Python :: 3.10',
   'Programming Language :: Python :: 3.11',
   'Programming Language :: Python :: 3.12',
-  'Topic :: Scientific/Engineering'
+  'Topic :: Scientific/Engineering',
 ]
 dependencies = [
-  "aiida-core>=2.3",
-  "aiida-quantumespresso>=4.10,<4.13",
-  "aiida-hubbard==0.3.0",
+  "aiida-core~=2.8",
+  "aiida-quantumespresso~=5.0",
+  "aiida-hubbard~=0.7.0",
   "weas-widget>=0.2.6",
-  "table-widget>=0.0.3"
+  "table-widget>=0.0.3",
 ]
 dynamic = ['description', 'version']
 keywords = ['aiida', 'workflows', 'core-level', 'spectroscopy']
-license = {file = 'LICENSE'}
+license = { file = 'LICENSE' }
 name = 'aiidalab-qe-hp'
 readme = 'README.md'
-requires-python = '>=3.9'
+requires-python = '>=3.10'
 
 [project.entry-points."aiidalab_qe.properties"]
 "hp" = "aiidalab_qe_hp:hp"
@@ -41,13 +38,9 @@ dev = [
   'mypy==1.6.1',
   'pre-commit~=3.2',
   'pytest~=7.4',
-  'pytest-regressions~=2.2'
+  'pytest-regressions~=2.2',
 ]
-docs = [
-  'sphinx~=4.5.0',
-  'sphinx-design~=0.4.1',
-  'pydata-sphinx-theme~=0.13.3'
-]
+docs = ['sphinx~=4.5.0', 'sphinx-design~=0.4.1', 'pydata-sphinx-theme~=0.13.3']
 
 [project.urls]
 documentation = 'https://aiidalab-qe-hp.readthedocs.io/'
@@ -59,30 +52,21 @@ tracker = 'https://github.com/superstar54/aiidalab-qe-hp/issues'
 name = 'aiidalab_qe_hp'
 
 [tool.flit.sdist]
-exclude = [
-  '.github/',
-  'tests/',
-  '.gitignore',
-  '.pre-commit-config.yaml'
-]
+exclude = ['.github/', 'tests/', '.gitignore', '.pre-commit-config.yaml']
 
 [tool.mypy]
 disallow_untyped_calls = false
-exclude = [
-  '^tests/'
-]
+exclude = ['^tests/']
 strict = true
 
 [[tool.mypy.overrides]]
 ignore_missing_imports = true
-module = [
-  'ruamel.*'
-]
+module = ['ruamel.*']
 
 [tool.pytest.ini_options]
 filterwarnings = [
   'ignore:Creating AiiDA configuration folder.*:UserWarning',
-  'ignore:Object of type .* not in session, .* operation along .* will not proceed:sqlalchemy.exc.SAWarning'
+  'ignore:Object of type .* not in session, .* operation along .* will not proceed:sqlalchemy.exc.SAWarning',
 ]
 
 [tool.ruff]
@@ -93,19 +77,19 @@ quote-style = 'single'
 
 [tool.ruff.lint]
 ignore = [
-  'D203',  # Incompatible with D211 `no-blank-line-before-class`
-  'D213',  # Incompatible with D212 `multi-line-summary-second-line`
-  'RUF012'  # Mutable class attributes should be annotated with `typing.ClassVar`
+  'D203',   # Incompatible with D211 `no-blank-line-before-class`
+  'D213',   # Incompatible with D212 `multi-line-summary-second-line`
+  'RUF012', # Mutable class attributes should be annotated with `typing.ClassVar`
 ]
 select = [
-  'E',  # pydocstyle
-  'W',  # pydocstyle
-  'F',  # pyflakes
-  'I',  # isort
-  'N',  # pep8-naming
-  'PLC',  # pylint-convention
-  'PLE',  # pylint-error
-  'PLR',  # pylint-refactor
-  'PLW',  # pylint-warning
-  'RUF'  # ruff
+  'E',   # pydocstyle
+  'W',   # pydocstyle
+  'F',   # pyflakes
+  'I',   # isort
+  'N',   # pep8-naming
+  'PLC', # pylint-convention
+  'PLE', # pylint-error
+  'PLR', # pylint-refactor
+  'PLW', # pylint-warning
+  'RUF', # ruff
 ]
