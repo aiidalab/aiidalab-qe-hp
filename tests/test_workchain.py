@@ -45,18 +45,18 @@ def test_workchain(test_structure, pw_code, hp_code, method):
     builder = get_builder(codes, test_structure, parameters, **{})
 
     pw_resources = builder.scf.pw.metadata.options.resources
-    assert pw_resources['num_machines'] == 2
-    assert pw_resources['num_mpiprocs_per_machine'] == 3
-    assert pw_resources['num_cores_per_mpiproc'] == 4
+    assert pw_resources['num_machines'] == codes['pw']['nodes']
+    assert pw_resources['num_mpiprocs_per_machine'] == codes['pw']['ntasks_per_node']
+    assert pw_resources['num_cores_per_mpiproc'] == codes['pw']['cpus_per_task']
 
     hp_resources = builder.hubbard.hp.metadata.options.resources
-    assert hp_resources['num_machines'] == 5
-    assert hp_resources['num_mpiprocs_per_machine'] == 7
-    assert hp_resources['num_cores_per_mpiproc'] == 8
+    assert hp_resources['num_machines'] == codes['hp']['nodes']
+    assert hp_resources['num_mpiprocs_per_machine'] == codes['hp']['ntasks_per_node']
+    assert hp_resources['num_cores_per_mpiproc'] == codes['hp']['cpus_per_task']
 
     if method == 'self-consistent':
         for namespace in ('base_init_relax', 'base_relax'):
             resources = builder.relax[namespace].pw.metadata.options.resources
-            assert resources['num_machines'] == 2
-            assert resources['num_mpiprocs_per_machine'] == 3
-            assert resources['num_cores_per_mpiproc'] == 4
+            assert resources['num_machines'] == codes['pw']['nodes']
+            assert resources['num_mpiprocs_per_machine'] == codes['pw']['ntasks_per_node']
+            assert resources['num_cores_per_mpiproc'] == codes['pw']['cpus_per_task']
