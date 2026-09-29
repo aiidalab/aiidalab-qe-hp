@@ -56,7 +56,11 @@ def test_workchain(test_structure, pw_code, hp_code, method):
 
     if method == 'self-consistent':
         for namespace in ('base_init_relax', 'base_relax'):
-            resources = builder.relax[namespace].pw.metadata.options.resources
+            component = builder.relax[namespace].pw
+            resources = component.metadata.options.resources
             assert resources['num_machines'] == codes['pw']['nodes']
             assert resources['num_mpiprocs_per_machine'] == codes['pw']['ntasks_per_node']
             assert resources['num_cores_per_mpiproc'] == codes['pw']['cpus_per_task']
+            assert component.settings.get_dict()['CMDLINE'] == ['-pd', '.true.']
+
+    assert builder.scf.pw.settings.get_dict()['CMDLINE'] == ['-pd', '.true.']
