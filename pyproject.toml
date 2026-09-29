@@ -50,9 +50,9 @@ docs = [
 
 [project.urls]
 documentation = 'https://aiidalab-qe-hp.readthedocs.io/'
-homepage = 'https://github.com/superstar54/aiidalab-qe-hp'
-source = 'https://github.com/superstar54/aiidalab-qe-hp'
-tracker = 'https://github.com/superstar54/aiidalab-qe-hp/issues'
+homepage = 'https://github.com/aiidalab/aiidalab-qe-hp'
+source = 'https://github.com/aiidalab/aiidalab-qe-hp'
+tracker = 'https://github.com/aiidalab/aiidalab-qe-hp/issues'
 
 [tool.flit.module]
 name = 'aiidalab_qe_hp'
