@@ -9,6 +9,7 @@ def test_workchain(test_structure, pw_code, hp_code):
     model.hubbard_u = [['Co', '3d', 3.0]]
     model.hubbard_v = [['Co', '3d', 'O', '2p', 1.0]]
     model.protocol = 'fast'
+    model.method = 'self-consistent'
 
     codes = {
         'pw': {
@@ -39,4 +40,7 @@ def test_workchain(test_structure, pw_code, hp_code):
     }
 
     builder = get_builder(codes, test_structure, parameters, **{})
-    print(builder)
+    for namespace in ('base_init_relax', 'base_relax'):
+        resources = builder.relax[namespace].pw.metadata.options.resources
+        assert resources['num_machines'] == 1
+        assert resources['num_mpiprocs_per_machine'] == 1

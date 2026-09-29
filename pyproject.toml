@@ -13,16 +13,15 @@ classifiers = [
   'Operating System :: POSIX :: Linux',
   'Operating System :: MacOS :: MacOS X',
   'Programming Language :: Python',
-  'Programming Language :: Python :: 3.9',
   'Programming Language :: Python :: 3.10',
   'Programming Language :: Python :: 3.11',
   'Programming Language :: Python :: 3.12',
   'Topic :: Scientific/Engineering'
 ]
 dependencies = [
-  "aiida-core>=2.3",
-  "aiida-quantumespresso>=4.10,<4.13",
-  "aiida-hubbard==0.3.0",
+  "aiida-core~=2.8",
+  "aiida-quantumespresso~=5.0",
+  "aiida-hubbard~=0.7.0",
   "weas-widget>=0.2.6",
   "table-widget>=0.0.3"
 ]
@@ -31,7 +30,7 @@ keywords = ['aiida', 'workflows', 'core-level', 'spectroscopy']
 license = {file = 'LICENSE'}
 name = 'aiidalab-qe-hp'
 readme = 'README.md'
-requires-python = '>=3.9'
+requires-python = '>=3.10'
 
 [project.entry-points."aiidalab_qe.properties"]
 "hp" = "aiidalab_qe_hp:hp"
