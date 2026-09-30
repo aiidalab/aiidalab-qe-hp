@@ -39,7 +39,9 @@ def check_codes(pw_code, hp_code):
 
 
 def update_resources(builder, codes):
-    set_component_resources(builder.relax.base.pw, codes.get('pw'))
+    for namespace in ('base_init_relax', 'base_relax'):
+        if namespace in builder.relax:
+            set_component_resources(builder.relax[namespace].pw, codes.get('pw'))
     set_component_resources(builder.scf.pw, codes.get('pw'))
     set_component_resources(builder.hubbard.hp, codes.get('hp'))
 
@@ -66,8 +68,8 @@ def get_builder(codes, structure, parameters, **kwargs):
 
     scf_overrides = parameters['advanced']
     relax_overrides = {
-        'base': parameters['advanced'],
-        'base_final_scf': parameters['advanced'],
+        'base_init_relax': parameters['advanced'],
+        'base_relax': parameters['advanced'],
     }
     overrides = {
         'tolerance_onsite': orm.Float(PROTOCOL_MAP_U[protocol]),

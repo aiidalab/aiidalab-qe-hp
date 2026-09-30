@@ -4,7 +4,7 @@ requires = ['flit_core>=3.4,<4']
 
 [project]
 authors = [
-  {name = 'Xing Wang', email = 'xingwang1991@gmail.com'}
+  { name = 'Xing Wang', email = 'xingwang1991@gmail.com' }
 ]
 classifiers = [
   'Development Status :: 4 - Beta',
@@ -13,25 +13,22 @@ classifiers = [
   'Operating System :: POSIX :: Linux',
   'Operating System :: MacOS :: MacOS X',
   'Programming Language :: Python',
-  'Programming Language :: Python :: 3.9',
-  'Programming Language :: Python :: 3.10',
-  'Programming Language :: Python :: 3.11',
   'Programming Language :: Python :: 3.12',
   'Topic :: Scientific/Engineering'
 ]
 dependencies = [
-  "aiida-core>=2.3",
-  "aiida-quantumespresso>=4.10,<4.13",
-  "aiida-hubbard==0.3.0",
+  "aiida-core~=2.8",
+  "aiida-quantumespresso~=5.0",
+  "aiida-hubbard~=0.7.0",
   "weas-widget>=0.2.6",
   "table-widget>=0.0.3"
 ]
 dynamic = ['description', 'version']
 keywords = ['aiida', 'workflows', 'core-level', 'spectroscopy']
-license = {file = 'LICENSE'}
+license = { file = 'LICENSE' }
 name = 'aiidalab-qe-hp'
 readme = 'README.md'
-requires-python = '>=3.9'
+requires-python = '>=3.12'
 
 [project.entry-points."aiidalab_qe.properties"]
 "hp" = "aiidalab_qe_hp:hp"
@@ -51,9 +48,9 @@ docs = [
 
 [project.urls]
 documentation = 'https://aiidalab-qe-hp.readthedocs.io/'
-homepage = 'https://github.com/superstar54/aiidalab-qe-hp'
-source = 'https://github.com/superstar54/aiidalab-qe-hp'
-tracker = 'https://github.com/superstar54/aiidalab-qe-hp/issues'
+homepage = 'https://github.com/aiidalab/aiidalab-qe-hp'
+source = 'https://github.com/aiidalab/aiidalab-qe-hp'
+tracker = 'https://github.com/aiidalab/aiidalab-qe-hp/issues'
 
 [tool.flit.module]
 name = 'aiidalab_qe_hp'
