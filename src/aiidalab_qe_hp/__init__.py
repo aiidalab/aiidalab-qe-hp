@@ -8,7 +8,7 @@ from .results import HpResultsModel, HpResultsPanel
 from .settings import HpSettingsPanel
 from .workchain import workchain_and_builder
 
-__version__ = '0.1.5'
+__version__ = '0.1.6'
 
 
 class HpPluginOutline(PluginOutline):
