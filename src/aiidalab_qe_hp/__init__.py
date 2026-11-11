@@ -1,34 +1,41 @@
-"""AiiDALab plugin for Quantum ESPRESSO Hubbard parameters (HP) calculations."""
+"""AiiDALab QE plugin for computing Hubbard parameters (HP)."""
 
-from aiidalab_qe.common.panel import PluginOutline
-
-from .model import HpSettingsModel
-from .resources import HpResourceSettingsModel, HpResourceSettingsPanel
-from .results import HpResultsModel, HpResultsPanel
-from .settings import HpSettingsPanel
-from .workchain import workchain_and_builder
+from aiidalab_qe.plugins import QeAppPlugin
 
 __version__ = '0.1.6'
 
 
-class HpPluginOutline(PluginOutline):
-    title = 'Hubbard parameter (HP)'
-    help = """"""
+class HpPlugin(QeAppPlugin):
+    @property
+    def outline(self) -> str:
+        return 'Hubbard parameter (HP)'
 
+    def configuration(self):
+        from .model import HpSettingsModel
+        from .settings import HpSettingsPanel
 
-hp = {
-    'outline': HpPluginOutline,
-    'configuration': {
-        'panel': HpSettingsPanel,
-        'model': HpSettingsModel,
-    },
-    'resources': {
-        'panel': HpResourceSettingsPanel,
-        'model': HpResourceSettingsModel,
-    },
-    'workchain': workchain_and_builder,
-    'result': {
-        'panel': HpResultsPanel,
-        'model': HpResultsModel,
-    },
-}
+        return {
+            'panel': HpSettingsPanel,
+            'model': HpSettingsModel,
+        }
+
+    def resources(self):
+        from .resources import HpResourceSettingsModel, HpResourceSettingsPanel
+
+        return {
+            'panel': HpResourceSettingsPanel,
+            'model': HpResourceSettingsModel,
+        }
+
+    def workchain(self):
+        from .workchain import workchain_and_builder
+
+        return workchain_and_builder
+
+    def result(self):
+        from .results import HpResultsModel, HpResultsPanel
+
+        return {
+            'panel': HpResultsPanel,
+            'model': HpResultsModel,
+        }
