@@ -30,8 +30,8 @@ name = 'aiidalab-qe-hp'
 readme = 'README.md'
 requires-python = '>=3.12'
 
-[project.entry-points."aiidalab_qe.properties"]
-"hp" = "aiidalab_qe_hp:hp"
+[project.entry-points."aiidalab_qe.plugins"]
+"hp" = "aiidalab_qe_hp:HpPlugin"
 
 [project.optional-dependencies]
 dev = [
