@@ -2,7 +2,7 @@
 
 from aiidalab_qe.plugins import QeAppPlugin
 
-__version__ = '0.1.7'
+__version__ = '0.1.8'
 
 
 class HpPlugin(QeAppPlugin):
