@@ -2,7 +2,7 @@ from aiida import orm
 from aiida_hubbard.workflows.hubbard import SelfConsistentHubbardWorkChain
 from aiida_quantumespresso.common.types import ElectronicType, RelaxType, SpinType
 from aiida_quantumespresso.data.hubbard_structure import HubbardStructureData
-from aiidalab_qe.utils import set_component_resources
+from aiidalab_qe.utils import enable_pencil_decomposition, set_component_resources
 
 PROTOCOL_MAP_U = {'fast': 1.0, 'balanced': 0.5, 'stringent': 0.1}
 
@@ -42,7 +42,9 @@ def update_resources(builder, codes):
     for namespace in ('base_init_relax', 'base_relax'):
         if namespace in builder.relax:
             set_component_resources(builder.relax[namespace].pw, codes.get('pw'))
+            enable_pencil_decomposition(builder.relax[namespace].pw)
     set_component_resources(builder.scf.pw, codes.get('pw'))
+    enable_pencil_decomposition(builder.scf.pw)
     set_component_resources(builder.hubbard.hp, codes.get('hp'))
 
 
